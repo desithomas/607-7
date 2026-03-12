@@ -1,0 +1,12 @@
+---
+title: "Assignment 7: Web Technologies"
+author: "Desiree Thomas, Denise Atherley, Kiera Griffiths"
+format: html
+editor: visual
+---
+
+## Approach: HTML and JSON
+
+For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the <table> </table><tr></tr><td></td> structure (not in this particular order) and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will use read_html() and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
+
+Anticipated challenges may include structuring challenges and gaining an understanding of HTML and JSON structure since they are being manually written. It is important that we follow and maintain the correct syntax to avoid issues and bugs later on. The output when viewing the JSON and HTML will also look different between the two. We will host our files on GitHub and use the RAW version for reproducibility.

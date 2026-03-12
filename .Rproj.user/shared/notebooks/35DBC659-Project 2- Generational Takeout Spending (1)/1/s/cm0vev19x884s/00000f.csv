@@ -1,0 +1,94 @@
+"0",""
+"0","tidy_gen_takeout <- generational_takeout %>%"
+"0","  "
+"0","  # Reshape from wide to long (tidy) format"
+"0","  pivot_longer("
+"0","    cols = -Generation,       # all columns except 'Generation'"
+"0","    names_to = ""period"",      # column names (Jan.25, Feb.25...) go into 'period'"
+"0","    values_to = ""expenses""    # values go into 'expenses'"
+"0","  ) %>%"
+"0"," "
+"0","  # Split 'period' into month and year, this is part of the normalization process."
+"0","  #\\. is used to escape the '.' and prevent an error in the separate() function; '.' on it's own is a wildcard character "
+"0","  separate(period, into = c(""month"", ""year""), sep = ""\\."") %>%"
+"0"," "
+"0","   # Standardize year to 4 digits and convert Generation to factor"
+"0","  mutate("
+"0","    year = paste0(""20"", year),"
+"0","    Generation = as.factor(Generation)"
+"0","  ) %>%"
+"0"," "
+"0","   # Standardize column names manually"
+"0","  rename("
+"0","    generation = Generation"
+"0","  )"
+"0",""
+"0","# Preview tidy dataset"
+"0","tidy_gen_takeout %>%"
+"0","   print(n = Inf)"
+"1","[38;5;246m# A tibble: 30 × 4[39m
+"
+"1","   generation   month year  expenses
+"
+"1","   [3m[38;5;246m<fct>[39m[23m        [3m[38;5;246m<chr>[39m[23m [3m[38;5;246m<chr>[39m[23m    [3m[38;5;246m<int>[39m[23m
+"
+"1","[38;5;250m 1[39m Gen Z        Jan   2025       185
+"
+"1","[38;5;250m 2[39m Gen Z        Feb   2025       172
+"
+"1","[38;5;250m 3[39m Gen Z        Mar   2025       198
+"
+"1","[38;5;250m 4[39m Gen Z        Apr   2025       210
+"
+"1","[38;5;250m 5[39m Gen Z        May   2025       205
+"
+"1","[38;5;250m 6[39m Gen Z        Jun   2025       225
+"
+"1","[38;5;250m 7[39m Millennials  Jan   2025       240
+"
+"1","[38;5;250m 8[39m Millennials  Feb   2025       228
+"
+"1","[38;5;250m 9[39m Millennials  Mar   2025       255
+"
+"1","[38;5;250m10[39m Millennials  Apr   2025       270
+"
+"1","[38;5;250m11[39m Millennials  May   2025       265
+"
+"1","[38;5;250m12[39m Millennials  Jun   2025       285
+"
+"1","[38;5;250m13[39m Gen X        Jan   2025       195
+"
+"1","[38;5;250m14[39m Gen X        Feb   2025       188
+"
+"1","[38;5;250m15[39m Gen X        Mar   2025       205
+"
+"1","[38;5;250m16[39m Gen X        Apr   2025       215
+"
+"1","[38;5;250m17[39m Gen X        May   2025       210
+"
+"1","[38;5;250m18[39m Gen X        Jun   2025       220
+"
+"1","[38;5;250m19[39m Baby Boomers Jan   2025       120
+"
+"1","[38;5;250m20[39m Baby Boomers Feb   2025       115
+"
+"1","[38;5;250m21[39m Baby Boomers Mar   2025       130
+"
+"1","[38;5;250m22[39m Baby Boomers Apr   2025       140
+"
+"1","[38;5;250m23[39m Baby Boomers May   2025       135
+"
+"1","[38;5;250m24[39m Baby Boomers Jun   2025       145
+"
+"1","[38;5;250m25[39m Silent Gen   Jan   2025        75
+"
+"1","[38;5;250m26[39m Silent Gen   Feb   2025        70
+"
+"1","[38;5;250m27[39m Silent Gen   Mar   2025        82
+"
+"1","[38;5;250m28[39m Silent Gen   Apr   2025        88
+"
+"1","[38;5;250m29[39m Silent Gen   May   2025        85
+"
+"1","[38;5;250m30[39m Silent Gen   Jun   2025        90
+"
