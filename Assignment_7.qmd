@@ -46,6 +46,7 @@ html_df <- raw_html %>%
 html_element("table") %>%
 
 html_table()
+
 glimpse(html_df)
 ```
 
