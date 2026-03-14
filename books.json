@@ -1,23 +1,23 @@
 [
   {
-    "title": "Four Views on Free Will",
-    "authors": ["John Martin Fischer", "Robert Kane", "Derk Pereboom", "Manuel Vargas"],
-    "year": 2007,
-    "publisher": "Blackwell Pub",
+    "Title": "Four Views on Free Will",
+    "Author(s)": ["John Martin Fischer", "Robert Kane", "Derk Pereboom", "Manuel Vargas"],
+    "Year": 2007,
+    "Publisher": "Blackwell Pub",
     "ISBN-10": "1405134860"
   },
 {
-    "title": "Meditations",
-    "authors": ["Marcus Aurelius"],
-    "year": 2018,
-    "publisher": "CreateSpace Independent Publishing Platform",
+    "Title": "Meditations",
+    "Author(s)": ["Marcus Aurelius"],
+    "Year": 2018,
+    "Publisher": "CreateSpace Independent Publishing Platform",
     "ISBN-10": "1503280462"
   },
 {
-    "title": "The Problems of Philosophy ",
-    "authors": ["Bertrand Russell"],
-    "year": 2013,
-    "publisher": " Martino Fine Books",
+    "Title": "The Problems of Philosophy ",
+    "Author(s)": ["Bertrand Russell"],
+    "Year": 2013,
+    "Publisher": " Martino Fine Books",
     "ISBN-10": "161427486X"
   }
 ]
