@@ -7,24 +7,7 @@ editor: visual
 
 ## Approach: HTML and JSON
 
-
-For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the
-
-<table>
-
-</table>
-
-<tr>
-
-</tr>
-
-<td>
-
-</td>
-
-structure (not in this particular order) and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
-
-For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the <table> </table><tr></tr><td></td> structure (not in this particular order) and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
+For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the table structure and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
 
 Anticipated challenges may include structuring challenges and gaining an understanding of HTML and JSON structure since they are being manually written. It is important that we follow and maintain the correct syntax to avoid issues and bugs later on. The output when viewing the JSON and HTML will also look different between the two. We will host our files on GitHub and use the RAW version for reproducibility.
 
@@ -34,10 +17,13 @@ Anticipated challenges may include structuring challenges and gaining an underst
 library(tidyverse)
 library(rvest)
 library(jsonlite)
+library(knitr)
 ```
-#Load the HTML data frame
+
+#Load the HTML data frame and displays the table
+
 ```{r}
-raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/main/books.html")
+raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.html")
 
 #Extract the table and place it into a dataframe
 html_df <- raw_html %>%
@@ -47,14 +33,18 @@ html_element("table") %>%
 
 html_table()
 
-glimpse(html_df)
+#displayed contents in Knitr table to check if identical
+kable(html_df, caption = "Book data from HTML file")
 ```
 
-#Load the JSON data frame
+#Load the JSON data frame and displays the table
+
 ```{r}
 json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/main/books.json")
 
-glimpse(json_df)
+#displayed table contents using Knitr to check if identical
+kable(json_df, caption = "Book data from the JSON file")
 ```
 
-When we first loaded the JSON raw file into the dataframe and used glimpse(), the dataframe was displayed in a list format. To 
+#Analysis: Are the two tables identical?
+
