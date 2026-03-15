@@ -11,7 +11,7 @@ For this assignment we have chosen three philosophy books. Since not all group m
 
 Anticipated challenges may include structuring challenges and gaining an understanding of HTML and JSON structure since they are being manually written. It is important that we follow and maintain the correct syntax to avoid issues and bugs later on. The output when viewing the JSON and HTML will also look different between the two. We will host our files on GitHub and use the RAW version for reproducibility.
 
-#Load the HTML data into R dataframe
+### Load the HTML data into R dataframe
 
 ```{r}
 library(tidyverse)
@@ -20,7 +20,7 @@ library(jsonlite)
 library(knitr)
 ```
 
-#Load the HTML data frame and displays the table
+### Load the HTML data frame and displays the table
 
 ```{r}
 raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.html")
@@ -37,16 +37,16 @@ html_table()
 kable(html_df, caption = "Book data from HTML file")
 ```
 
-#Load the JSON data frame and displays the table
+### Load the JSON data frame and displays the table
 
 ```{r}
 json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.json")
 
-#displayed table contents using Knitr to check if identical
+#Displayed table contents using Knitr to check if identical
 kable(json_df, caption = "Book data from the JSON file")
 ```
 
-## Analysis: Are the two tables identical?
+## Are the two tables identical?
 
 We use the identical function to check if the objects are 100% clones. If they are not identical it will render as False.
 
@@ -55,7 +55,8 @@ We use the identical function to check if the objects are 100% clones. If they a
 
 identical(html_df, json_df)
 ```
-In order to know what specific differences exist for these tables, we will use the all.equal function. It can identify if the data is the same while ignoring minor attribute differences like table indexing.
+
+We received FALSE, thus, the tables are not identical. We used the all.equal() to identify if the data is the same while ignoring minor attribute differences like table indexing.
 
 ```{r}
 # Using this function to identify the specific differences between the tables
@@ -63,39 +64,50 @@ In order to know what specific differences exist for these tables, we will use t
 all.equal(html_df, json_df)
 ```
 
+When we checked with the two functions, we received FALSE for both. all.equal() output 6 errors initially with a brief description of the cause. Some errors were caused during the manual creation of the .html and .json files, which were easily rectified. The other errors were related to the .json files processing as a list versus the .html which processed as a character. The following code was used to make the necessary changes.
+
+### Data Transformation
+
+After running the initial checks regarding whether the tables were identical or not, we worked to resolve the 6 issues found. We applied the mutate function to flatten the list of authors in the JSON file and standardized the year in the HTML file. We also resolved errors that occurred when we were manually creating the HTML and JSON files, such as accidentally having entered too many spaces and us initially not matching the case for year in our mutate function (year instead of Year).
+
 ```{r}
-# 1. Standardize JSON: Flatten the author list and ensure year is character
+# Standardize JSON: Flatten the author list and ensure year is character
 json_df_final <- json_df %>%
   mutate(
-    # Flattens the list of authors into a single comma-separated string [cite: 4, 18]
+    # Flattens the list of authors into a single comma-separated string 
     Authors = map_chr(Authors, ~ paste(.x, collapse = ", ")), 
     # Ensures the year column is a character type 
     Year = as.character(Year)
   )
 
-# 2. Standardize HTML: Ensure year is character to match JSON 
+# Standardize HTML: Ensure year is character to match JSON 
 html_df_final <- html_df %>%
   mutate(
     Year = as.character(Year)
   )
 
-# 3. Remove any metadata/attributes that differ (like row names or class types) 
-# Converting to tibble ensures both have the same base class
+# Remove any metadata/attributes that differ (like row names or class types) 
+#Converting to tibble ensures both have the same base class
 json_df_final <- as_tibble(json_df_final)
 html_df_final <- as_tibble(html_df_final)
 
-# 4. Final verification [cite: 14]
-is_identical <- identical(html_df_final, json_df_final)
 
-# Output results
-print(paste("Are the tables identical now?", is_identical))
 
-# Displaying both to confirm visual parity [cite: 13]
+# Displaying both to confirm visual parity 
 kable(html_df_final, caption = "Cleaned HTML Table")
 kable(json_df_final, caption = "Cleaned JSON Table")
 ```
+
 ```{r}
+# Checks whether the tables are identical 
 all.equal(html_df_final, json_df_final)
+identical(html_df_final, json_df_final)
 ```
 
+### Conclusion
 
+The tables are now output as TRUE, thus, they are identical. For the data transformation of the .json and .html files, we used an LLM (Gemini) to provide a reference and snippets of code to make the tables identical.
+
+## Citation
+
+(Google DeepMind. (2026). Gemini Pro 3.1 \[Large language model\]. https://gemini.google.com. Accessed March 14, 2026
