@@ -7,24 +7,107 @@ editor: visual
 
 ## Approach: HTML and JSON
 
-
-For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the
-
-<table>
-
-</table>
-
-<tr>
-
-</tr>
-
-<td>
-
-</td>
-
-structure (not in this particular order) and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
-
-For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the <table> </table><tr></tr><td></td> structure (not in this particular order) and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
-
+For this assignment we have chosen three philosophy books. Since not all group members are familiar with JSON and HTML, we will manually create these structures. HTML will use the table structure and JSON will focus mostly on the data types. The JSON will handle the nesting since there are multiple authors listed for the same book; this will be held within an array. The files will be saved with .html and .json. To load, we will load the rvest package and use read_html() to read the file and in the next step we will extract the table components. We will use the jsonlite library for the JSON file and use fromJSON to read the file.
 
 Anticipated challenges may include structuring challenges and gaining an understanding of HTML and JSON structure since they are being manually written. It is important that we follow and maintain the correct syntax to avoid issues and bugs later on. The output when viewing the JSON and HTML will also look different between the two. We will host our files on GitHub and use the RAW version for reproducibility.
+
+### Load the HTML data into R dataframe
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(jsonlite)
+library(knitr)
+```
+
+### Load the HTML data frame and displays the table
+
+```{r}
+raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.html")
+
+#Extract the table and place it into a dataframe
+html_df <- raw_html %>%
+  
+#Looks for the table element; it must be in a string
+html_element("table") %>%
+
+html_table()
+
+#displayed contents in Knitr table to check if identical
+kable(html_df, caption = "Book data from HTML file")
+```
+
+### Load the JSON data frame and displays the table
+
+```{r}
+json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.json")
+
+#Displayed table contents using Knitr to check if identical
+kable(json_df, caption = "Book data from the JSON file")
+```
+
+## Are the two tables identical?
+
+We use the identical function to check if the objects are 100% clones. If they are not identical it will render as False.
+
+```{r}
+# Checking if tables are identical with identical function below
+
+identical(html_df, json_df)
+```
+
+We received FALSE, thus, the tables are not identical. We used the all.equal() to identify if the data is the same while ignoring minor attribute differences like table indexing.
+
+```{r}
+# Using this function to identify the specific differences between the tables
+
+all.equal(html_df, json_df)
+```
+
+When we checked with the two functions, we received FALSE for both. all.equal() output 6 errors initially with a brief description of the cause. Some errors were caused during the manual creation of the .html and .json files, which were easily rectified. The other errors were related to the .json files processing as a list versus the .html which processed as a character. The following code was used to make the necessary changes.
+
+### Data Transformation
+
+After running the initial checks regarding whether the tables were identical or not, we worked to resolve the 6 issues found. We applied the mutate function to flatten the list of authors in the JSON file and standardized the year in the HTML file. We also resolved errors that occurred when we were manually creating the HTML and JSON files, such as accidentally having entered too many spaces and us initially not matching the case for year in our mutate function (year instead of Year).
+
+```{r}
+# Standardize JSON: Flatten the author list and ensure year is character
+json_df_final <- json_df %>%
+  mutate(
+    # Flattens the list of authors into a single comma-separated string 
+    Authors = map_chr(Authors, ~ paste(.x, collapse = ", ")), 
+    # Ensures the year column is a character type 
+    Year = as.character(Year)
+  )
+
+# Standardize HTML: Ensure year is character to match JSON 
+html_df_final <- html_df %>%
+  mutate(
+    Year = as.character(Year)
+  )
+
+# Remove any metadata/attributes that differ (like row names or class types) 
+#Converting to tibble ensures both have the same base class
+json_df_final <- as_tibble(json_df_final)
+html_df_final <- as_tibble(html_df_final)
+
+
+
+# Displaying both to confirm visual parity 
+kable(html_df_final, caption = "Cleaned HTML Table")
+kable(json_df_final, caption = "Cleaned JSON Table")
+```
+
+```{r}
+# Checks whether the tables are identical 
+all.equal(html_df_final, json_df_final)
+identical(html_df_final, json_df_final)
+```
+
+### Conclusion
+
+The tables are now output as TRUE, thus, they are identical. For the data transformation of the .json and .html files, we used an LLM (Gemini) to provide a reference and snippets of code to make the tables identical.
+
+## Citation
+
+(Google DeepMind. (2026). Gemini Pro 3.1 \[Large language model\]. https://gemini.google.com. Accessed March 14, 2026
