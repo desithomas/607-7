@@ -46,5 +46,53 @@ json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/head
 kable(json_df, caption = "Book data from the JSON file")
 ```
 
-#Analysis: Are the two tables identical?
+## Analysis: Are the two tables identical?
+
+We use the identical function to check if the objects are 100% clones. If they are not identical it will render as False.
+
+```{r}
+# Checking if tables are identical with identical function below
+
+identical(html_df, json_df)
+```
+In order to know what specific differences exist for these tables, we will use the all.equal function. It can identify if the data is the same while ignoring minor attribute differences like table indexing.
+
+```{r}
+# Using this function to identify the specific differences between the tables
+
+all.equal(html_df, json_df)
+```
+
+```{r}
+# 1. Standardize JSON: Flatten the author list and ensure year is character
+json_df_final <- json_df %>%
+  mutate(
+    # Flattens the list of authors into a single comma-separated string [cite: 4, 18]
+    Authors = map_chr(Authors, ~ paste(.x, collapse = ", ")), 
+    # Ensures the year column is a character type 
+    year = as.character(year)
+  )
+
+# 2. Standardize HTML: Ensure year is character to match JSON 
+html_df_final <- html_df %>%
+  mutate(
+    year = as.character(year)
+  )
+
+# 3. Remove any metadata/attributes that differ (like row names or class types) 
+# Converting to tibble ensures both have the same base class
+json_df_final <- as_tibble(json_df_final)
+html_df_final <- as_tibble(html_df_final)
+
+# 4. Final verification [cite: 14]
+is_identical <- identical(html_df_final, json_df_final)
+
+# Output results
+print(paste("Are the tables identical now?", is_identical))
+
+# Displaying both to confirm visual parity [cite: 13]
+kable(html_df_final, caption = "Cleaned HTML Table")
+kable(json_df_final, caption = "Cleaned JSON Table")
+```
+
 
