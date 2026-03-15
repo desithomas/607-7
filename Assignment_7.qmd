@@ -70,13 +70,13 @@ json_df_final <- json_df %>%
     # Flattens the list of authors into a single comma-separated string [cite: 4, 18]
     Authors = map_chr(Authors, ~ paste(.x, collapse = ", ")), 
     # Ensures the year column is a character type 
-    year = as.character(year)
+    Year = as.character(Year)
   )
 
 # 2. Standardize HTML: Ensure year is character to match JSON 
 html_df_final <- html_df %>%
   mutate(
-    year = as.character(year)
+    Year = as.character(Year)
   )
 
 # 3. Remove any metadata/attributes that differ (like row names or class types) 
@@ -93,6 +93,9 @@ print(paste("Are the tables identical now?", is_identical))
 # Displaying both to confirm visual parity [cite: 13]
 kable(html_df_final, caption = "Cleaned HTML Table")
 kable(json_df_final, caption = "Cleaned JSON Table")
+```
+```{r}
+all.equal(html_df_final, json_df_final)
 ```
 
 
