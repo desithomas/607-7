@@ -23,7 +23,7 @@ library(knitr)
 ### Load the HTML data frame and displays the table
 
 ```{r}
-raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.html")
+raw_html <- read_html("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/main/books.html")
 
 #Extract the table and place it into a dataframe
 html_df <- raw_html %>%
@@ -40,7 +40,7 @@ kable(html_df, caption = "Book data from HTML file")
 ### Load the JSON data frame and displays the table
 
 ```{r}
-json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/data-loading/books.json")
+json_df <-fromJSON("https://raw.githubusercontent.com/desithomas/607-7/refs/heads/main/books.json")
 
 #Displayed table contents using Knitr to check if identical
 kable(json_df, caption = "Book data from the JSON file")
